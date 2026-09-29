@@ -3,167 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEV CLAN | Official Hub</title>
+    <title>DEV CLAN | Game & Design Studio</title>
+    <!-- Loads the real-world processing graphics engine -->
+    <script src="https://cloudflare.com"></script>
     <style>
-        /* Premium Cyber-Dragon Tech Styling */
         body { 
             background-color: #0b0c10; 
             color: #66fcf1; 
             font-family: 'Courier New', Courier, monospace; 
             text-align: center; 
             margin: 0;
-            padding: 40px 20px; 
+            padding: 20px; 
         }
-        
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: #1f2833;
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             border: 2px solid #45f3ff;
             box-shadow: 0px 0px 20px #45f3ff;
         }
-
-        /* Stylized ASCII Art Dragon Shield to mirror your logo design */
-        .ascii-logo {
-            color: #45f3ff;
-            font-size: 14px;
-            white-space: pre;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            display: inline-block;
-            text-align: left;
+        h1 { font-size: 3em; color: #ffffff; margin: 0; text-shadow: 0 0 10px #45f3ff; }
+        
+        /* Studio Canvas Section Layout */
+        .studio-box {
+            background-color: #0b0c10;
+            border: 2px solid #c5a3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
         }
-
-        h1 { 
-            font-size: 3.5em; 
-            color: #ffffff; 
-            margin: 0;
-            text-shadow: 0 0 10px #45f3ff;
-            letter-spacing: 3px;
-        }
-
-        .subtitle {
-            color: #c5a3ff;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin: 10px 0 30px 0;
-            letter-spacing: 1px;
-        }
-
-        hr {
-            border: none;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #45f3ff, transparent);
-            margin: 30px 0;
-        }
-
-        h2 {
-            color: #ffffff;
-            font-size: 1.8em;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-
-        /* Clean, Readable Code of Conduct Layout */
-        .rules-box { 
-            text-align: left; 
-            max-width: 600px; 
-            margin: 0 auto; 
-            color: #c5c6c7; 
-            line-height: 1.8;
-            font-size: 1.1em;
-        }
-
-        .rules-box strong {
-            color: #ffffff;
-        }
-
-        .rule-item {
-            margin-bottom: 15px;
-            padding-left: 15px;
-            border-left: 3px solid #c5a3ff;
-        }
-
-        /* Division Showcase Section */
-        .divisions {
+        #canvas-container {
             display: flex;
-            justify-content: space-around;
-            margin-top: 40px;
+            justify-content: center;
+            margin: 15px 0;
         }
-
-        .dept {
-            background: #0b0c10;
-            padding: 15px;
+        canvas {
+            border: 3px solid #45f3ff;
             border-radius: 8px;
-            width: 40%;
-            border: 1px solid #c5a3ff;
+            box-shadow: 0 0 15px rgba(69, 243, 255, 0.2);
         }
-
-        .dept h3 {
-            margin: 0 0 10px 0;
-            color: #45f3ff;
+        
+        .control-panel {
+            margin: 15px 0;
         }
-
-        .footer {
-            margin-top: 50px;
+        .engine-btn {
+            background-color: #c5a3ff;
+            color: #0b0c10;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            font-family: monospace;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .engine-btn:active { transform: scale(0.95); }
+        .code-preview {
+            background: #0b0c10;
+            color: #a7ff83;
+            padding: 15px;
+            text-align: left;
+            border-radius: 5px;
             font-size: 0.9em;
-            color: #45f3ff;
-            opacity: 0.7;
+            overflow-x: auto;
+            border: 1px solid #66fcf1;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Custom text-based Dragon Wing Winged-A Emblem mirroring your sketch -->
-        <div class="ascii-logo">
-    /\__/\       /\
-   /      \     /  \___
-  /  /\/\  \   /   /   \
- /  /    \  \_/   / /  /
- \_/      \______/ /__/  
-   [ DEV CLAN INITIAL-A ]
-        </div>
-
         <h1>DEV CLAN</h1>
-        <div class="subtitle">Official 7th Grade Technology & Digital Arts Hub</div>
-        <p style="color: #c5c6c7; font-size: 1.1em;">Learning programming, building video games, and designing premium graphic interfaces together.</p>
+        <p style="color: #c5a3ff; font-weight: bold; margin: 5px 0;">// Live Creative Coding & Design Engine //</p>
         
-        <hr>
+        <!-- THE GAME & GRAPHICS ENGINE STUDIO -->
+        <div class="studio-box">
+            <h2>[ 🚀 THE CLAN CREATIVE SANDBOX ]</h2>
+            <p style="color: #c5c6c7; margin: 0;">Tap the buttons to change the running code loop and modify the game screen:</p>
+            
+            <div class="control-panel">
+                <button class="engine-btn" onclick="setMode('art')">🎨 GRAPHICS DESIGN MODE</button>
+                <button class="engine-btn" onclick="setMode('game')">🎮 INTERACTIVE GAME MODE</button>
+            </div>
 
-        <h2>Our Dual Divisions</h2>
-        <div class="divisions">
-            <div class="dept">
-                <h3>🎨 Art & UI</h3>
-                <p style="margin: 0; font-size: 0.95em; color: #c5c6c7;">Character concepts, pixel art, layout styles, and graphics.</p>
-            </div>
-            <div class="dept">
-                <h3>💻 Code & Logic</h3>
-                <p style="margin: 0; font-size: 0.95em; color: #c5c6c7;">Software logic, script writing, architecture, and deployment.</p>
-            </div>
+            <!-- The real active processing canvas mounts right here -->
+            <div id="canvas-container"></div>
+            
+            <h3>Active Script Running in Engine:</h3>
+            <pre class="code-preview" id="code-box">
+// Loading Dev Clan Graphics Compiler...</pre>
         </div>
 
-        <hr>
-        
-        <h2>Clan Code of Conduct</h2>
-        <div class="rules-box">
-            <div class="rule-item">
-                <strong>1. Keep it Tech:</strong> All repositories and shared workspaces are strictly reserved for code construction and digital asset collaboration.
-            </div>
-            <div class="rule-item">
-                <strong>2. Teamwork Only:</strong> All projects are engineered in public channels. Shared review ensures transparent build progress across the squad.
-            </div>
-            <div class="rule-item">
-                <strong>3. Respect the Clan:</strong> We actively debug together, assist struggling members, and celebrate every layout milestone reached by the team.
-            </div>
-        </div>
-
-        <div class="footer">
-            &lt; // System operational - Initialized by Clan Leader // &gt;
-        </div>
+        <p style="color: #c5c6c7; font-size: 0.95em;">1. <strong>Art Mode:</strong> Generates responsive cyber strings tracking your finger/mouse.<br>2. <strong>Game Mode:</strong> Tapping the canvas fires plasma tracking rings up the grid coordinate chain.</p>
     </div>
+
+    <!-- SCRIPT LOGIC: Powers the interactive rendering engine -->
+    <script>
+        let currentMode = 'art';
+        let circles = [];
+
+        function setup() {
+            // Places the canvas engine inside our dashboard layout container
+            let canvas = createCanvas(500, 300);
+            canvas.parent('canvas-container');
+            background(15);
+            setMode('art');
+        }
+
+        function draw() {
+            background(11, 12, 16, 40); // Dark fade trail background effect
+            
+            if (currentMode === 'art') {
+                // Interactive Digital Art Mode logic
+                stroke('#45f3ff');
+                strokeWeight(1.5);
+                noFill();
+                for (let i = 0; i < 5; i++) {
+                    ellipse(mouseX, mouseY, i * 30 + sin(frameCount * 0.05) * 10);
+                }
+            } else if (currentMode === 'game') {
+                // Interactive Mini Game Loop logic
+                noStroke();
+                fill('#c5a3ff');
+                for (let i = circles.length - 1; i >= 0; i--) {
+                    ellipse(circles[i].x, circles[i].y, circles[i].size);
+                    circles[i].y -= 4; // Moves tracking pulse upward
+                    circles[i].size += 0.5;
+                    if (circles[i].y < 0) { circles.splice(i, 1); } // Memory cleanup
+                }
+                
+                // Draws a simple defense module base tracker at the canvas floor
+                fill('#45f3ff');
+                rect(mouseX - 20, height - 15, 40, 15, 4);
+            }
+        }
+
+        // Listens for clicks/taps on the drawing window to register interactive actions
+        function mousePressed() {
+            if (currentMode === 'game' && mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+                circles.push({ x: mouseX, y: height - 20, size: 10 });
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            let codeBox = document.getElementById("code-box");
+            
+            if (mode === 'art') {
+                codeBox.innerHTML = `function draw() {\n  // Art Engine Loop\n  stroke('#45f3ff');\n  for (let i = 0; i < 5; i++) {\n    ellipse(mouseX, mouseY, i * 30 + sin(frameCount * 0.05) * 10);\n  }\n}`;
+            } else if (mode === 'game') {
+                codeBox.innerHTML = `function mousePressed() {\n  // Core Game Physics Trigger\n  if (mode == 'game') {\n    circles.push({ x: mouseX, y: height - 20, size: 10 });\n  }\n}`;
+            }
+        }
+    </script>
 
 </body>
 </html>
