@@ -1,143 +1,38 @@
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
-import sqlite3
-import hashlib
-from datetime import datetime
-import os
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DEV-CLAN</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="loginScreen" class="screen active">
+    <div class="panel">
+      <h1>DEV-CLAN</h1>
+      <p>Login or Register</p>
 
-app = Flask(__name__, static_folder=".")
-CORS(app)
+      <input id="username" type="text" value="player1" placeholder="Username" />
+      <input id="password" type="password" value="123456" placeholder="Password" />
 
-DB_NAME = "game.db"
+      <div class="buttons">
+        <button id="loginBtn">Login</button>
+        <button id="registerBtn" class="secondary">Register</button>
+      </div>
 
-def init_db():
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
+      <p id="status" class="status"></p>
+    </div>
+  </div>
 
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
-            created_at TEXT NOT NULL
-        )
-    """)
+  <div id="gameScreen" class="screen">
+    <div class="hud">
+      <span id="playerName">Player</span>
+      <button id="logoutBtn">Logout</button>
+    </div>
 
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS players_online (
-            username TEXT PRIMARY KEY,
-            x REAL,
-            y REAL,
-            last_update TEXT NOT NULL
-        )
-    """)
+    <canvas id="gameCanvas" width="900" height="500"></canvas>
+  </div>
 
-    conn.commit()
-    conn.close()
-
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
-
-@app.route("/")
-def index():
-    return send_from_directory(".", "index.html")
-
-@app.route("/register", methods=["POST"])
-def register():
-    data = request.get_json()
-    username = data.get("username", "").strip()
-    password = data.get("password", "").strip()
-
-    if not username or not password:
-        return jsonify({"success": False, "error": "Username and password are required"}), 400
-
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-
-    try:
-        c.execute(
-            "INSERT INTO users (username, password, created_at) VALUES (?, ?, ?)",
-            (username, hash_password(password), datetime.now().isoformat())
-        )
-        conn.commit()
-        return jsonify({"success": True, "message": "Account created successfully"}), 201
-    except sqlite3.IntegrityError:
-        return jsonify({"success": False, "error": "Username already exists"}), 400
-    finally:
-        conn.close()
-
-@app.route("/login", methods=["POST"])
-def login():
-    data = request.get_json()
-    username = data.get("username", "").strip()
-    password = data.get("password", "").strip()
-
-    if not username or not password:
-        return jsonify({"success": False, "error": "Username and password are required"}), 400
-
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute(
-        "SELECT id FROM users WHERE username = ? AND password = ?",
-        (username, hash_password(password))
-    )
-    user = c.fetchone()
-    conn.close()
-
-    if user:
-        return jsonify({"success": True, "message": "Login successful", "username": username}), 200
-    return jsonify({"success": False, "error": "Invalid username or password"}), 401
-
-@app.route("/players", methods=["GET"])
-def get_players():
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("SELECT username, x, y FROM players_online")
-    rows = c.fetchall()
-    conn.close()
-
-    players = [{"username": username, "x": x, "y": y} for username, x, y in rows]
-    return jsonify({"players": players}), 200
-
-@app.route("/update_position", methods=["POST"])
-def update_position():
-    data = request.get_json()
-    username = data.get("username", "").strip()
-    x = data.get("x")
-    y = data.get("y")
-
-    if not username:
-        return jsonify({"success": False, "error": "Username required"}), 400
-
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("""
-        INSERT INTO players_online (username, x, y, last_update)
-        VALUES (?, ?, ?, ?)
-        ON CONFLICT(username)
-        DO UPDATE SET x = excluded.x, y = excluded.y, last_update = excluded.last_update
-    """, (username, x, y, datetime.now().isoformat()))
-    conn.commit()
-    conn.close()
-
-    return jsonify({"success": True}), 200
-
-@app.route("/logout", methods=["POST"])
-def logout():
-    data = request.get_json()
-    username = data.get("username", "").strip()
-
-    if not username:
-        return jsonify({"success": False, "error": "Username required"}), 400
-
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("DELETE FROM players_online WHERE username = ?", (username,))
-    conn.commit()
-    conn.close()
-
-    return jsonify({"success": True}), 200
-
-if __name__ == "__main__":
-    init_db()
-    app.run(debug=True, host="0.0.0.0", port=5000)
+  <script src="app.js"></script>
+</body>
+</html>
