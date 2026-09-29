@@ -1,49 +1,46 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import sqlite3
 import hashlib
 from datetime import datetime
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=".")
 CORS(app)
 
 DB_NAME = "game.db"
-
 
 def init_db():
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
 
-    c.execute(
-        """
+    c.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
             created_at TEXT NOT NULL
         )
-        """
-    )
+    """)
 
-    c.execute(
-        """
+    c.execute("""
         CREATE TABLE IF NOT EXISTS players_online (
             username TEXT PRIMARY KEY,
             x REAL,
             y REAL,
-            z REAL,
             last_update TEXT NOT NULL
         )
-        """
-    )
+    """)
 
     conn.commit()
     conn.close()
 
-
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
+@app.route("/")
+def index():
+    return send_from_directory(".", "index.html")
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -60,7 +57,7 @@ def register():
     try:
         c.execute(
             "INSERT INTO users (username, password, created_at) VALUES (?, ?, ?)",
-            (username, hash_password(password), datetime.now().isoformat()),
+            (username, hash_password(password), datetime.now().isoformat())
         )
         conn.commit()
         return jsonify({"success": True, "message": "Account created successfully"}), 201
@@ -68,7 +65,6 @@ def register():
         return jsonify({"success": False, "error": "Username already exists"}), 400
     finally:
         conn.close()
-
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -83,7 +79,7 @@ def login():
     c = conn.cursor()
     c.execute(
         "SELECT id FROM users WHERE username = ? AND password = ?",
-        (username, hash_password(password)),
+        (username, hash_password(password))
     )
     user = c.fetchone()
     conn.close()
@@ -92,27 +88,16 @@ def login():
         return jsonify({"success": True, "message": "Login successful", "username": username}), 200
     return jsonify({"success": False, "error": "Invalid username or password"}), 401
 
-
 @app.route("/players", methods=["GET"])
 def get_players():
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute("SELECT username, x, y, z FROM players_online")
+    c.execute("SELECT username, x, y FROM players_online")
     rows = c.fetchall()
     conn.close()
 
-    players = []
-    for row in rows:
-        username, x, y, z = row
-        players.append({
-            "username": username,
-            "x": x,
-            "y": y,
-            "z": z,
-        })
-
+    players = [{"username": username, "x": x, "y": y} for username, x, y in rows]
     return jsonify({"players": players}), 200
-
 
 @app.route("/update_position", methods=["POST"])
 def update_position():
@@ -120,27 +105,22 @@ def update_position():
     username = data.get("username", "").strip()
     x = data.get("x")
     y = data.get("y")
-    z = data.get("z")
 
     if not username:
         return jsonify({"success": False, "error": "Username required"}), 400
 
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute(
-        """
-        INSERT INTO players_online (username, x, y, z, last_update)
-        VALUES (?, ?, ?, ?, ?)
+    c.execute("""
+        INSERT INTO players_online (username, x, y, last_update)
+        VALUES (?, ?, ?, ?)
         ON CONFLICT(username)
-        DO UPDATE SET x = excluded.x, y = excluded.y, z = excluded.z, last_update = excluded.last_update
-        """,
-        (username, x, y, z, datetime.now().isoformat()),
-    )
+        DO UPDATE SET x = excluded.x, y = excluded.y, last_update = excluded.last_update
+    """, (username, x, y, datetime.now().isoformat()))
     conn.commit()
     conn.close()
 
     return jsonify({"success": True}), 200
-
 
 @app.route("/logout", methods=["POST"])
 def logout():
@@ -157,7 +137,6 @@ def logout():
     conn.close()
 
     return jsonify({"success": True}), 200
-
 
 if __name__ == "__main__":
     init_db()
